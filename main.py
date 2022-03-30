@@ -1,7 +1,6 @@
 import turtle
-#import csv
+# import csv
 import pandas
-
 
 FONT = ("Courier", 20, "normal")
 END_FONT = ("Arial", 60, "normal")
@@ -9,7 +8,7 @@ END_FONT = ("Arial", 60, "normal")
 screen = turtle.Screen()
 screen.title("Can you spot all european countries?")
 europe_map = "blank_europe_map.gif"
-screen.setup(846,725)
+screen.setup(846, 725)
 screen.addshape(europe_map)
 turtle.shape(europe_map)
 
@@ -44,7 +43,17 @@ already_guessed = []
 
 while still_guessing:
     country_answer = screen.textinput(title=f"Correct ({correct_guesses}/{num_of_countries})",
-                                      prompt="Country: ").title()
+                                      prompt="Country: ")
+
+    if country_answer is None:
+        still_guessing = False
+        break
+
+    country_answer = country_answer.title()
+
+    if correct_guesses == num_of_countries or country_answer == "Exit":
+        still_guessing = False
+        break
 
     if country_answer in countries_list and country_answer not in already_guessed:
         correct_guesses += 1
@@ -53,13 +62,17 @@ while still_guessing:
         country.penup()
         country.hideturtle()
         country.color("black")
-        #country.setposition(countries_list[country_answer])
+        # country.setposition(countries_list[country_answer])
         country_data = data[data.country == country_answer]
         country.setposition(x=float(country_data.x), y=float(country_data.y))
-        #country.write(arg=country_answer, align="left")
+        # country.write(arg=country_answer, align="left")
         country.write(arg=country_data.country.item(), align="left")
 
-    if correct_guesses == num_of_countries:
-        still_guessing = False
+""" print countries not guessed by the user """
 
-screen.exitonclick()
+# get all countries that were not guess
+
+remaining_countries = [country for country in countries_list if country not in already_guessed]
+
+remaining_data = pandas.DataFrame(remaining_countries)
+remaining_data.to_csv("remaining_countries.csv")
