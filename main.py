@@ -51,10 +51,6 @@ while still_guessing:
 
     country_answer = country_answer.title()
 
-    if correct_guesses == num_of_countries or country_answer == "Exit":
-        still_guessing = False
-        break
-
     if country_answer in countries_list and country_answer not in already_guessed:
         correct_guesses += 1
         already_guessed.append(country_answer)
@@ -67,6 +63,10 @@ while still_guessing:
         country.setposition(x=float(country_data.x), y=float(country_data.y))
         # country.write(arg=country_answer, align="left")
         country.write(arg=country_data.country.item(), align="left")
+
+    if correct_guesses == num_of_countries or country_answer == "Exit":
+        still_guessing = False
+        break
 
 """ print countries not guessed by the user """
 
